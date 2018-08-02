@@ -1,0 +1,24 @@
+<div id="nav" class="nav">
+    <button id="open-panel" class="open-panel"><i class="icon-library"></i></button>
+
+    <nav class="nav-inner">
+
+        <% for (var i in theme.menu){ %>
+        <% if (theme.menu[i]==='javascript:;') { %>
+        <li class="nav-item nav-item-tag">
+            <a id="nav-tag" class="nav-link" href="#"><%= i %></a>
+            <div id="nav-tags" class="nav-tag-wrap">
+                <i class="nav-tag-arrow"></i>
+                <%- partial('_widget/tag') %>
+            </div>
+        </li>
+        <% } else { %>
+        <li class="nav-item<% if( theme.menu[i] === '/' && is_home() || is_current(theme.menu[i]) ) {  %> active<% } %>">
+            <a class="nav-link" href="<%- url_for(theme.menu[i]) %>"><%= i %></a>
+        </li>
+        <% } %>
+        <% } %>
+        
+
+    </nav>
+</div>
