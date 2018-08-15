@@ -4,9 +4,25 @@ date: 2018-08-15 14:07:25
 tags:
 ---
 
+# Linux with PREEMPT_RT 
+
+## 博主总结
+
 文章摘录自 https://wiki.linuxfoundation.org/realtime/documentation/start 更多内容请前往该网址查看
 
-# Linux with PREEMPT_RT 
+本博文介绍了如何在标准的Linux系统上**打 PREEMPT_RT 补丁**使之具备实时性，其实就是教你怎么编译内核。
+
+除了介绍如何打补丁外，讲述了如何建立一个基础的**实时线程**，并介绍了实时线程在内存方面的注意事项，包括
+
+1. 锁内存
+
+2. 栈内存
+
+3. 动态内存分配
+
+   ​
+
+   最后给出了在实时线程的基础上给出了**周期任务在实时线程中的实现方式**例子。
 
 ## setup Linux with PREEMPT_RT properly
 
