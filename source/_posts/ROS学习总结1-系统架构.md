@@ -5,7 +5,7 @@ tags:
 ---
 # ROS系统架构
 
-​	声明：本博客大部分摘抄自 **中国大学MOOC---《机器人操作系统入门》 课程讲义**，编写此博客主要是为了整理自己在学习ros时的思路并结合其他的一些优秀博文作为整理。
+​	声明：本博客大部分摘抄自 **中国大学MOOC---《机器人操作系统入门》 课程讲义**与**《ROS机器人程序设计 第2版》**，编写此博客主要是为了整理自己在学习ros时的思路并结合其他的一些优秀博文作为整理，并加入自己对ros的理解。
 
 ​	ROS系统的架构主要可以分为两个层级，分别是**文件系统级(The Filesystem level)** 和**计算图级(The Computation)**.
 
@@ -222,20 +222,7 @@ launch文件同样也遵循着xml格式规范，是一种标签文本，它的�
 | group      | 设定命名空间                 |
 | /launch    | 根标签                       |
 
-### Package命令行工具
 
-| -命令             | -作用                            |
-| ----------------- | -------------------------------- |
-| rospack           | 获取信息或者在系统中查找工作空间 |
-| catkin_create_pkg | 创建一个新的功能包               |
-| catkin_make       | 编译工作空间                     |
-| rosdep            | 安装功能包的系统依赖             |
-| rqt_dep           | 查看包的依赖关系图               |
-| roscd             | 更改目录 类Linux的 cd命令        |
-| rosed             | 编辑文件                         |
-| roscp             | 从一些功能包复制文件             |
-| rosd              | 列出功能包的目录                 |
-| rosls             | 功能包下的文件                   |
 
 ### 软件元包Metapackage
 
@@ -279,6 +266,94 @@ ROS的通讯方式有以下四种：
 
 ### Topic 主题
 
+​	ROS中的通信方式中，topic的通信方式是ROS中比较常见的单向异步通信方式 。对于实时性、周期性的消息，使用topic来传输是最佳的选择。topic是一种点对点的单向通信方式，这里的“点”指的是node，也就是说node之间可以通过topic方式来传递信息。
+
+#### Topic特点
+
+​	通过Topic进行消息路由不需要节点之间直接连接，这就意味着发布者（publisher）和订阅者（subscriber）之间不需要知道彼此是否存在。同一个Topic也可以有很多订阅者，一个主题可以有多个订阅者也可以有多个发布者，但是你需要注意用不同的节点发布同样的主题，否则会产生冲突。
+
+​	每个主题都是强类型的，发布到主题上的消息（Message）必须与主题的ROS消息类型相匹配，并且节点只能接收类型匹配的消息，节点想要订阅主题，就必须具有相同的消息类型。
+
+​	ROS的主题可以使用TCP/IP或者UDP进行传输。基于TCP传输称为TCPROS，它使用TCP/IP长连接。这是ROS默认的传输方式。基于UDP传输称为UDPROS，它是一种低延迟高效率的传输方式，但可能产生数据丢失。所以它最适合于像远程操控的任务。
+
+- topic通信方式是异步的，发送者调用publish()方法，发送完成立即返回，不用等待反馈。 
+- subscriber通过回调函数的方式来处理消息。 
+- topic可以同时有多个subscribers，也可以同时有多个publishers。
+- topic是强类型的。
+
+#### Topic的初始化过程
+
+​	首先，publisher节点和subscriber节点都要到节点管理器进行注册，然后publisher会发布topic，subscriber在master的指挥下会订阅该topic，从而建立起sub-pub之间的通信。注意整个过程是单向的。 Subscriber接收消息会进行处理，一般这个过程叫做回调(Callback)。所谓回调就是提前定义好了一个处理函数（写在代码中） ，当有消息来就会触发这个处理函数，函数会对消息进行处理。 
+
+#### Topic与Message
+
+​	topic有很严格的格式要求，这种数据格式就是Message。Message按照定义解释就是topic内容的数据类型，也称之为topic的格式标准。这里和我们平常用到的Massage直观概念有所不同，这里的Message不单单指一条发布或者订阅的消息，也指定为topic的格式标准。 
+
+​	可以理解msg是一个“类”，那么我们每次发布的内容可以理解为“对象”，这么对比来理解可能更加容易。 我们实际通常不会把Message概念分的那么清，通常说Message既指的是类，也是指它的对象。而msg文件则相当于类的定义了。 
+
+
+
+### Service 服务
+
+
+
+### Parameter server 参数服务器
+
+
+
+### Action 动作
+
+
+
+
+
+## 附录
+
+
+### Package命令行工具
+
+| -命令             | -作用                            |
+| ----------------- | -------------------------------- |
+| rospack           | 获取信息或者在系统中查找工作空间 |
+| catkin_create_pkg | 创建一个新的功能包               |
+| catkin_make       | 编译工作空间                     |
+| rosdep            | 安装功能包的系统依赖             |
+| rqt_dep           | 查看包的依赖关系图               |
+| roscd             | 更改目录 类Linux的 cd命令        |
+| rosed             | 编辑文件                         |
+| roscp             | 从一些功能包复制文件             |
+| rosd              | 列出功能包的目录                 |
+| rosls             | 功能包下的文件                   |
+
+### Message命令
+| -message命令         | -作用               |
+| -------------------- | ------------------- |
+| rosmsg list          | 列出系统上所有的msg |
+| rosmsg show msg_name | 显示某个msg的内容   |
+
+### Service 命令
+
+| -命令           | -作用                    |
+| --------------- | ------------------------ |
+| rosservice list | 显示服务列表             |
+| rosservice info | 打印服务信息             |
+| rosservice type | 打印服务类型             |
+| rosservice uri  | 打印服务ROSRPC uri       |
+| rosservice find | 按服务类型查找服务       |
+| rosservice call | 使用所提供的args调用服务 |
+| rosservice args | 打印服务参数             |
+
+### Parameter server命令
+
+| -命令                              | -功能          |
+| ---------------------------------- | -------------- |
+| rosparam set param_key param_value | 设置参数       |
+| rosparam get param_key             | 显示参数       |
+| rosparam load file_name            | 从文件加载参数 |
+| rosparam dump file_name            | 保存参数到文件 |
+| rosparam delete                    | 删除参数       |
+| rosparam list                      | 列出参数名称   |
+
 #### Topoc命令
 
 | -命令                            | -作用                                                        |
@@ -292,21 +367,7 @@ ROS的通讯方式有以下四种：
 | rostopic pub topic_name type arg | 将数据发布到主题。它允许我们直接从命令行中对任意主题创建和发布数据 |
 | rostopic type topic_name         | 输出主题的类型，或者说主题中发布的消息类型                   |
 
-
-
-
-
-### Service 服务
-
-### Parameter server 参数服务器
-
-### Action 动作
-
-## 博客TODO
-
-
-
-
+### 博客TODO
 
 ----ROS中常用的工具介绍
 
@@ -338,3 +399,145 @@ ROS的通讯方式有以下四种：
 使用TF
 URDF与xacro
 MoveIt
+
+
+
+### 常见Msg类型
+
+#### Vector3.msg 
+
+```
+#文件位置:geometry_msgs/Vector3.msg
+float64 x
+float64 y
+float64 z
+```
+
+#### Accel.msg 
+
+```
+#定义加速度项，包括线性加速度和角加速度
+#文件位置:geometry_msgs/Accel.msg
+Vector3 linear
+Vector3 angular
+```
+
+#### Header.msg 
+
+```
+#定义数据的参考时间和参考坐标
+#文件位置:std_msgs/Header.msg
+uint32 seq #数据ID
+time stamp #数据时间戳
+string frame_id #数据的参考坐标系
+```
+
+#### Quaternion.msg 
+
+```
+#消息代表空间中旋转的四元数
+#文件位置:geometry_msgs/Quaternion.msg
+float64 x
+float64 y
+float64 z
+float64 w
+```
+
+#### Point.msg 
+
+```
+#空间中的点的位置
+#文件位置:geometry_msgs/Point.msg
+float64 x
+float64 y
+float64 z
+```
+
+#### Pose.msg 
+
+```
+#消息定义自由空间中的位姿信息，包括位置和指向信息
+#文件位置:geometry_msgs/Pose.msg
+Point position
+Quaternion orientation
+```
+
+#### PoseStamped.msg 
+
+```
+#定义有时空基准的位姿
+#文件位置：geometry_msgs/PoseStamped.msg
+Header header
+Pose pose
+```
+
+#### PoseWithCovariance.msg 
+
+```
+#表示空间中含有不确定性的位姿信息
+#文件位置：geometry_msgs/PoseWithCovariance.msg
+Pose pose
+float64[36] covariance
+```
+
+#### Twist.msg 
+
+```
+#定义空间中物体运动的线速度和角速度
+#文件位置：geometry_msgs/Twist.msg
+Vector3 linear
+Vector3 angular
+```
+
+#### TwistWithCovariance.msg 
+
+```
+#消息定义了包含不确定性的速度量，协方差矩阵按行分别表示：
+#沿x方向速度的不确定性，沿y方向速度的不确定性，沿z方向速度的不确定性
+#绕x转动角速度的不确定性，绕y轴转动的角速度的不确定性，绕z轴转动的
+#角速度的不确定性
+#文件位置：geometry_msgs/TwistWithCovariance.msg
+Twist twist
+float64[36] covariance #分别表示[x; y; z; Rx; Ry; Rz]
+```
+
+#### Odometry.msg 
+
+```
+#消息描述了自由空间中位置和速度的估计值
+#文件位置：nav_msgs/Odometry.msg
+Header header
+string child_frame_id
+PoseWithCovariance pose
+TwistWithCovariance twist
+```
+
+
+
+### 常见Srv类型
+
+#### Empty.srv 
+
+```
+#文件位置：std_srvs/Empty.srv
+#代表一个空的srv类型
+
+---
+```
+
+#### GetPlan.srv 
+
+```
+#文件位置:nav_msgs/GetPlan.srv
+#得到一条从当前位置到目标点的路径
+geometry_msgs/PoseStamped start #起始点
+geometry_msgs/PoseStamped goal #目标点
+float32 tolerance #到达目标点的x，y方向的容错距离
+---
+nav_msgs/Path plan
+```
+
+
+
+### 常见 Action类型
+
