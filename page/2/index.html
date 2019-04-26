@@ -1,0 +1,588 @@
+<!DOCTYPE html><html><head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content><meta name="keywords" content><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><title>Hexo</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">John Doe</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">12</span></a></div></div></div><nav class="no-bg" id="nav"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Hexo</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">Hexo</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/14/ROS学习总结1-系统架构/">ROS学习总结1:系统架构</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-14</time><div class="content"><h1 id="ROS系统架构"><a href="#ROS系统架构" class="headerlink" title="ROS系统架构"></a>ROS系统架构</h1><p>​    声明：本博客大部分摘抄自 <strong>中国大学MOOC—《机器人操作系统入门》 课程讲义</strong>与<strong>《ROS机器人程序设计 第2版》</strong>，编写此博客主要是为了整理自己在学习ros时的思路并结合其他的一些优秀博文作为整理，并加入自己对ros的理解。</p>
+<p>​    ROS系统的架构主要可以分为两个层级，分别是<strong>文件系统级(The Filesystem level)</strong> 和<strong>计算图级(The Computation)</strong>.</p>
+<p>​    文件系统级主要根据ROS工作空间中文件的<strong>物理组织形式</strong>来展开，分别介绍有哪些目录，每个目录中的某个文件是干什么的；计算图级是以ROS整个控制系统中各个模块的<strong>逻辑组织形式</strong>来展开的，介绍ROS中的基本组件以及组件之间建立联系的方式。</p>
+<h2 id="文件系统级"><a href="#文件系统级" class="headerlink" title="文件系统级"></a>文件系统级</h2><h3 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h3><p>在ROS的官方wiki里面，一个标准的Catkin工作空间应该是下列的样子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">workspace_folder/         -- WORKSPACE 工作空间</span><br><span class="line">  src/                    -- SOURCE SPACE 源文件空间</span><br><span class="line">    CMakeLists.txt        -- The &apos;toplevel&apos; CMake file</span><br><span class="line">    package_1/</span><br><span class="line">      CMakeLists.txt</span><br><span class="line">      package.xml</span><br><span class="line">      ...</span><br><span class="line">    package_n/</span><br><span class="line">      CATKIN_IGNORE       -- Optional empty file to exclude package_n from being processed</span><br><span class="line">      CMakeLists.txt</span><br><span class="line">      package.xml</span><br><span class="line">      ...</span><br><span class="line">  build/                  -- BUILD SPACE 编译空间</span><br><span class="line">    CATKIN_IGNORE         -- Keeps catkin from walking this directory</span><br><span class="line">  devel/                  -- DEVELOPMENT SPACE (set by CATKIN_DEVEL_PREFIX) 开发空间</span><br><span class="line">    bin/</span><br><span class="line">    etc/</span><br><span class="line">    include/</span><br><span class="line">    lib/</span><br><span class="line">    share/</span><br><span class="line">    .catkin</span><br><span class="line">    env.bash</span><br><span class="line">    setup.bash</span><br><span class="line">    setup.sh</span><br><span class="line">    ...</span><br><span class="line">  install/                -- INSTALL SPACE (set by CMAKE_INSTALL_PREFIX) 安装空间</span><br><span class="line">    bin/</span><br><span class="line">    etc/</span><br><span class="line">    include/</span><br><span class="line">    lib/</span><br><span class="line">    share/</span><br><span class="line">    .catkin             </span><br><span class="line">    env.bash</span><br><span class="line">    setup.bash</span><br><span class="line">    setup.sh</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<ul>
+<li>工作空间（一般也叫catkin工作空间）：一个包含功能包、可编辑源文件或编译包的文件夹。当你向同时编译不同的功能包时非常方便，并且可以用来保存本地开发包。<ul>
+<li>源文件空间：src/: ROS的catkin软件包（源代码包） </li>
+<li>编译空间 build/: catkin（CMake） 的缓存信息和中间文件 </li>
+<li>开发空间 devel/: 生成的目标文件（包括头文件，动态链接库，静态链接库，可执行文件等） 、环<br>境变量 </li>
+</ul>
+</li>
+</ul>
+<h3 id="开发工作流"><a href="#开发工作流" class="headerlink" title="开发工作流"></a>开发工作流</h3><p>在编译过程中，它们的工作流程如图 ：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">src/</th>
+<th style="text-align:center">–&gt;</th>
+<th style="text-align:center">bulid/</th>
+<th style="text-align:center">–&gt;</th>
+<th style="text-align:center">devel/</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">package源代码包</td>
+<td style="text-align:center">–&gt;</td>
+<td style="text-align:center">cmake&amp;catkin缓存和中间文件</td>
+<td style="text-align:center">–&gt;</td>
+<td style="text-align:center">目标文件</td>
+</tr>
+</tbody>
+</table>
+<p>​    <strong>后两个路径由catkin系统自动生成、管理，我们日常的开发一般不会去涉及，而主要用到的是src文件夹，我们写的ROS程序、网上下载的ROS源代码包都存放在这里。</strong>在编译时，catkin编译系统会递归的查找和编译 src/ 下的每一个源代码包。因此你也可以把几个源代码包放到同一个文件夹下。</p>
+<h3 id="Catkin编译系统"><a href="#Catkin编译系统" class="headerlink" title="Catkin编译系统"></a>Catkin编译系统</h3><p>​    上面介绍了工作空间，那么为什么叫catkin工作空间，catkin到底是什么呢？</p>
+<p>​    对于源代码包，我们只有编译才能在系统上运行。而Linux下的编译器有gcc、g++，随着源文件的增加，直接用gcc/g++命令的方式显得效率低下，人们开始用Makefile来进行编译。然而随着工程体量的增大，Makefile也不能满足需求，于是便出现了Cmake工具。CMake是对make工具的生成器，是更高层的工具，它简化了编译构建过程，能够管理大型项目，具有良好的扩展性。对于ROS这样大体量的平台来说，就采用的是CMake，并且ROS对CMake进行了扩展，于是便有了Catkin编译系统。</p>
+<p>​    简单来讲就是catkin可以生成CMakeLists.txt，cmake工具根据CMakeLists.txt可以生成Makefile，make工具根据Makefile调用gcc等编译器，经过编译、链接等阶段生成最终的可执行文件。所以catkon是比cmake抽象层度更高的编译系统。</p>
+<h4 id="catkin的特点"><a href="#catkin的特点" class="headerlink" title="catkin的特点"></a>catkin的特点</h4><p>Catkin是基于CMake的编译构建系统，具有以下特点： </p>
+<ul>
+<li>Catkin沿用了包管理的传统像 find_package() 基础结构, pkg-config </li>
+<li>扩展了CMake，例如 <ul>
+<li>软件包编译后无需安装就可使用 </li>
+<li>自动生成 find_package() 代码， pkg-config 文件 </li>
+<li>解决了多个软件包构建顺序问题 </li>
+</ul>
+</li>
+</ul>
+<h4 id="catkin软件包的组成"><a href="#catkin软件包的组成" class="headerlink" title="catkin软件包的组成"></a>catkin软件包的组成</h4><p>一个Catkin的软件包（package） 必须要包括两个文件： </p>
+<ul>
+<li>package.xml: 包括了package的描述信息 <ul>
+<li>name, description, version, maintainer(s), license </li>
+<li>opt. authors, url’s, dependencies, plugins, etc… </li>
+</ul>
+</li>
+<li>CMakeLists.txt: 构建package所需的CMake文件 <ul>
+<li>调用Catkin的函数/宏 </li>
+<li>解析 package.xml </li>
+<li>找到其他依赖的catkin软件包 </li>
+<li>将本软件包添加到环境变量 </li>
+</ul>
+</li>
+</ul>
+<h4 id="catkin工作原理"><a href="#catkin工作原理" class="headerlink" title="catkin工作原理"></a>catkin工作原理</h4><p>catkin编译的工作流程如下： </p>
+<ol>
+<li><p>首先在工作空间 catkin_ws/src/ 下递归的查找其中每一个ROS的package。 </p>
+</li>
+<li><p>package中会有 package.xml 和 CMakeLists.txt 文件，Catkin(CMake)编译系统依据 CMakeLists.txt 文件,从而生成 makefiles (放在 catkin_ws/build/ )。 </p>
+</li>
+<li><p>然后 make 刚刚生成的 makefiles 等文件，编译链接生成可执行文件(放在 catkin_ws/devel )。</p>
+</li>
+</ol>
+<p><strong>也就是说，Catkin就是将 cmake 与 make 指令做了一个封装从而完成整个编译过程的工具。catkin有比较突出的优点，主要是： 操作更加简单 、一次配置，多次使用 、跨依赖项目编译 。</strong></p>
+<h3 id="Package软件包"><a href="#Package软件包" class="headerlink" title="Package软件包"></a>Package软件包</h3><p>通过前面catkin的介绍，我们知道 Package是catkin编译的基本单元。我们调用catkin的编译命令的对象就是一个个package，也就是说，ROS里面，所有的源代码（无论是cpp还是python）必须组织成Package的形式才可以利用catkin工具链进行编译。一个package可以编译出多个目标文件（ROS可执行程序、动态静态库、头文件等）。</p>
+<h4 id="package组织结构"><a href="#package组织结构" class="headerlink" title="package组织结构"></a>package组织结构</h4><p>一个package下常见的文件、路径有： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">├── CMakeLists.txt #(必须) 定义package的包名、依赖、源文件、目标文件等编译规则，是package不可少的成分</span><br><span class="line">├── package.xml #(必须)描述package的包名、版本号、作者、依赖等信息，是package不可少的成分 </span><br><span class="line">├── src/ #存放ROS的源代码，包括C++的源码和(.cpp)以及Python的module(.py) </span><br><span class="line">├── include/ #存放C++源码对应的头文件 </span><br><span class="line">├── scripts/ #存放可执行脚本，例如shell脚本(.sh)、Python脚本(.py) </span><br><span class="line">├── msg/ #存放自定义格式的消息(.msg) </span><br><span class="line">├── srv/ #存放自定义格式的服务(.srv) </span><br><span class="line">├── models/ #存放机器人或仿真场景的3D模型(.sda, .stl, .dae等) </span><br><span class="line">├── urdf/ #存放机器人的模型描述(.urdf或.xacro) </span><br><span class="line">├── launch/ #存放launch文件(.launch或.xml)</span><br></pre></td></tr></table></figure>
+<p>​    其中定义package的是 CMakeLists.txt 和 package.xml ，这两个文件是package中必不可少<br>的。catkin编译系统在编译前，首先就要解析这两个文件。这两个文件就定义了一个package。 </p>
+<p>​    通常ROS文件组织都是按照以上的形式，这是约定俗成的命名习惯，建议遵守。以上路径中，<strong>只有 CMakeLists.txt 和 package.xml 是必须的</strong>，其余路径根据软件包是否需要来决定。 </p>
+<h4 id="CMakeLists-txt文件"><a href="#CMakeLists-txt文件" class="headerlink" title="CMakeLists.txt文件"></a>CMakeLists.txt文件</h4><p>​    CMakeLists.txt 原本是Cmake编译系统的规则文件，而Catkin编译系统基本沿用了CMake的编译风格，只是针对ROS工程添加了一些宏定义。所以在写法上，catkin的 CMakeLists.txt 与CMake的基本一致。 这个文件直接规定了这个package要依赖哪些package，要编译生成哪些目标，如何编译等等流程。所以 CMakeLists.txt 非常重要，它指定了由源码到目标文件的规则，catkin编译系统在工作时首先会找到每个package下的 CMakeLists.txt ，然后按照规则来编译构建。 </p>
+<p>​    CMakeLists.txt 的基本语法都还是按照CMake，而Catkin在其中加入了少量的宏，总体的结构如下： </p>
+<table>
+<thead>
+<tr>
+<th>-cmake基本函数</th>
+<th>-功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cmake_minimum_required()</td>
+<td>CMake的版本号</td>
+</tr>
+<tr>
+<td>project()</td>
+<td>项目名称</td>
+</tr>
+<tr>
+<td>find_package()</td>
+<td>找到编译需要的其他CMake/Catkin package</td>
+</tr>
+<tr>
+<td>add_library()</td>
+<td>生成库</td>
+</tr>
+<tr>
+<td>add_executable()</td>
+<td>生成可执行二进制文件</td>
+</tr>
+<tr>
+<td>add_dependencies()</td>
+<td>定义目标文件依赖于其他目标文件，确保其他目标已被构建</td>
+</tr>
+<tr>
+<td>target_link_libraries()</td>
+<td>链接</td>
+</tr>
+<tr>
+<td>install()</td>
+<td>安装至本机</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>-catkin新加宏</th>
+<th>-功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>catkin_python_setup()</td>
+<td>打开catkin的Python Module的支持</td>
+</tr>
+<tr>
+<td>add_message_files()</td>
+<td>添加自定义Message/Service/Action文件</td>
+</tr>
+<tr>
+<td>add_service_files()</td>
+<td></td>
+</tr>
+<tr>
+<td>add_action_files()</td>
+<td></td>
+</tr>
+<tr>
+<td>generate_message()</td>
+<td>生成不同语言版本的msg/srv/action接口</td>
+</tr>
+<tr>
+<td>catkin_package()</td>
+<td>catkin新加宏，生成当前package的cmake配置，供依赖本包的其他软件包调用</td>
+</tr>
+<tr>
+<td>catkin_add_gtest()</td>
+<td>生成测试</td>
+</tr>
+</tbody>
+</table>
+<h4 id="package-xml文件"><a href="#package-xml文件" class="headerlink" title="package.xml文件"></a>package.xml文件</h4><p>​    package.xml 也是一个catkin的package必备文件，它是这个软件包的描述文件，在较早的ROS版本(rosbuild编译系统)中，这个文件叫做 manifest.xml ，用于描述pacakge的基本信息。如果你在网上看到一些ROS项目里包含着 manifest.xml ，那么它多半是hydro版本之前的项目了。 </p>
+<p>​    pacakge.xml 包含了package的名称、版本号、内容描述、维护人员、软件许可、编译构建工具、编译依赖、运行依赖等信息。实际上 rospack find 、 rosdep 等命令之所以能快速定位和分析出package的依赖项信息，就是直接读取了每一个pacakge中的 package.xml 文件。它为用户提供了快速了解一个pacakge的渠道。 </p>
+<p>​    pacakge.xml 遵循xml标签文本的写法，由于版本更迭原因，现在有两种格式并存（format1与format2） ，不过区别不大。在新版本（format2） 中，包含的标签为： </p>
+<table>
+<thead>
+<tr>
+<th>-标签</th>
+<th>-标签作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pacakge</td>
+<td>根标记文件</td>
+</tr>
+<tr>
+<td>name</td>
+<td>包名</td>
+</tr>
+<tr>
+<td>version</td>
+<td>版本号</td>
+</tr>
+<tr>
+<td>description</td>
+<td>内容描述</td>
+</tr>
+<tr>
+<td>maintainer</td>
+<td>维护者</td>
+</tr>
+<tr>
+<td>license</td>
+<td>软件许可证</td>
+</tr>
+<tr>
+<td>buildtool_depend</td>
+<td>编译构建工具，通常为catkin</td>
+</tr>
+<tr>
+<td>depend</td>
+<td>指定依赖项为编译、导出、运行需要的依赖，最常用</td>
+</tr>
+<tr>
+<td>build_depend</td>
+<td>编译依赖项</td>
+</tr>
+<tr>
+<td>build_export_depend</td>
+<td>导出依赖项</td>
+</tr>
+<tr>
+<td>exec_depend</td>
+<td>运行依赖项</td>
+</tr>
+<tr>
+<td>test_depend</td>
+<td>测试用例依赖项</td>
+</tr>
+<tr>
+<td>doc_depend</td>
+<td>文档依赖项</td>
+</tr>
+</tbody>
+</table>
+<h4 id="launch文件"><a href="#launch文件" class="headerlink" title="launch文件"></a>launch文件</h4><p>机器人是一个系统工程，通常一个机器人运行操作时要开启很多个node，对于一个复杂的机器人的启动操作应该怎么做呢？当然，我们并不需要每个节点依次进行rosrun，ROS为我们提供了一个命令能一次性启动master和多个node。该命令是： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ roslaunch pkg_name file_name.launch</span><br></pre></td></tr></table></figure>
+<p>​    roslaunch命令首先会自动进行检测系统的roscore有没有运行，也即是确认节点管理器是否在运行状态中，如果master没有启动，那么roslaunch就会首先启动master，然后再按照launch的规则执行。launch文件里已经配置好了启动的规则。 所以 roslaunch 就像是一个启动工具，能够一次性把多个节点按照我们预先的配置启动起来，减少我们在终端中一条条输入指令的麻烦。 </p>
+<p>launch文件同样也遵循着xml格式规范，是一种标签文本，它的格式包括以下标签： </p>
+<table>
+<thead>
+<tr>
+<th>-标签</th>
+<th>-标签功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>launch</td>
+<td>根标签</td>
+</tr>
+<tr>
+<td>node</td>
+<td>需要启动的node及其参数</td>
+</tr>
+<tr>
+<td>include</td>
+<td>包含其他launch</td>
+</tr>
+<tr>
+<td>machine</td>
+<td>指定运行的机器</td>
+</tr>
+<tr>
+<td>env-loader</td>
+<td>设置环境变量</td>
+</tr>
+<tr>
+<td>param</td>
+<td>定义参数到参数服务器</td>
+</tr>
+<tr>
+<td>rosparam</td>
+<td>启动yaml文件参数到参数服务器</td>
+</tr>
+<tr>
+<td>arg</td>
+<td>定义变量</td>
+</tr>
+<tr>
+<td>remap</td>
+<td>设定参数映射</td>
+</tr>
+<tr>
+<td>group</td>
+<td>设定命名空间</td>
+</tr>
+<tr>
+<td>/launch</td>
+<td>根标签</td>
+</tr>
+</tbody>
+</table>
+<h3 id="软件元包Metapackage"><a href="#软件元包Metapackage" class="headerlink" title="软件元包Metapackage"></a>软件元包Metapackage</h3><p>​    在一些ROS的教学资料和博客里，你可能还会看到一个Stack（功能包集） 的概念，它指的是将多个功能接近、甚至相互依赖的软件包的放到一个集合中去。但Stack这个概念在Hydro之后就取消了，取而代之的就是Metapackage。尽管换了个马甲，但它的作用没变，都是把一些相近的功能模块、软件包放到一起。 其中 moveit  就是运动规划相关的（主要是机械臂） 功能包集。 </p>
+<p>​    总结：metapackage是一些只有一个文件的特定包，它是package.xml。它不包含其他文件，如代码等。</p>
+<h3 id="其他常见文件类型"><a href="#其他常见文件类型" class="headerlink" title="其他常见文件类型"></a>其他常见文件类型</h3><table>
+<thead>
+<tr>
+<th>-文件类型</th>
+<th>-文件作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lunch文件</td>
+<td>launch文件一般以.launch或.xml结尾，它对ROS需要运行程序进行了打包，通过一句命令来启动。一般launch文件中会指定要启动哪些package下的哪些可执行程序，指定以什么参数启动，以及一些管理控制的命令。 launch文件通常放在软件包的 launch/ 路径中中。</td>
+</tr>
+<tr>
+<td>msg/srv/action文件</td>
+<td>ROS程序中有可能有一些自定义的消息/服务/动作文件，为程序的发者所设计的数据结构，这类的文件以.msg , .srv , .action 结尾，通常放在package的 msg/ , srv/ , action/ 路径下。</td>
+</tr>
+<tr>
+<td>urdf/xacro文件</td>
+<td>urdf/xacro文件是机器人模型的描述文件，以.urdf或.xacro结尾。它定义了机器人的连杆和关节的信息，以及它们之间的位置、角度等信息，通过urdf文件可以将机器人的物理连接信息表示出来。并在可视化调试和仿真中显示。</td>
+</tr>
+<tr>
+<td>yaml文件</td>
+<td>yaml文件一般存储了ROS需要加载的参数信息，一些属性的配置。通常在launch文件或程序中读取.yaml文件，把参数加载到参数服务器上。通常我们会把yaml文件存放在 param/ 路径下 。</td>
+</tr>
+<tr>
+<td>dae/stl文件</td>
+<td>dae或stl文件是3D模型文件，机器人的urdf或仿真环境通常会引用这类文件，它们描述了机器人的三维模型。相比urdf文件简单定义的性状，dae/stl文件可以定义复杂的模型，可以直接从solidworks或其他建模软件导出机器人装配模型，从而显示出更加精确的外形。</td>
+</tr>
+<tr>
+<td>rviz文件</td>
+<td>rviz文件本质上是固定格式的文本文件，其中存储了RViz窗口的配置（显示哪些控件、视角、参数） 。通常rviz文件不需要我们去手动修改，而是直接在RViz工具里保存，下次运行时直接读取。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="计算图级"><a href="#计算图级" class="headerlink" title="计算图级"></a>计算图级</h2><p>​    通过上述文件系统级的描述，我们知道一个完整的ROS体系里面，最重要的是src/目录下面的多个package。这些package通过catkin编译系统生成一个个的可执行文件，多个可执行文件与ROS本身构成了完整的控制系统。那么问题就来了，我们知道，在操作系统层面上，每一个可执行文件其实就是一个进程，进程之间的通讯有socket、管道等，那么在ROS上构建的这些package是如何联系在一起的呢？接下来我们要讲的就是ROS的通讯架构。</p>
+<p>​    <strong>ROS的通信架构是ROS的灵魂，也是整个ROS正常运行的关键所在。</strong></p>
+<p>ROS的通讯方式有以下四种：</p>
+<ul>
+<li>Topic 主题</li>
+<li>Service 服务</li>
+<li>Parameter server 参数服务器</li>
+<li><p>Action 动作</p>
+<h3 id="Node-amp-Master"><a href="#Node-amp-Master" class="headerlink" title="Node &amp; Master"></a>Node &amp; Master</h3></li>
+</ul>
+<p>​    在正式介绍ROS的通讯方式之前，需要先理解两个在ROS中相当重要的概念：“节点 Node”与“节点管理器 Master”。</p>
+<p>​    在ROS的世界里，最小的进程单元就是节点（node） 。一个软件包里可以有多个可执行文件，可执行文件在运行之后就成了一个进程(process)，这个进程在ROS中就叫做节点。 从程序角度来说，node就是一个可执行文件（通常为C++编译生成的可执行文件、Python脚本）被执行，加载到了内存之中；从功能角度来说，通常一个node负责者机器人的某一个单独的功能。 </p>
+<p>​    由于机器人的元器件很多，功能庞大，因此实际运行时往往会运行众多的node，负责感知世界、控制运动、决策和计算等功能。那么如何合理的进行调配、管理这些node？这就要利用ROS提供给我们的节点管理器master, master在整个网络通信架构里相当于管理中心，管理着各个node。node首先在master处进行注册，之后master会将该node纳入整个ROS程序中。node之间的通信也是先由master进行“牵线”，才能两两的进行点对点通信。当ROS程序启动时，第一步首先启动master，由节点管理器处理依次启动node。 </p>
+<h3 id="Topic-主题"><a href="#Topic-主题" class="headerlink" title="Topic 主题"></a>Topic 主题</h3><p>​    ROS中的通信方式中，topic的通信方式是ROS中比较常见的单向异步通信方式 。对于实时性、周期性的消息，使用topic来传输是最佳的选择。topic是一种点对点的单向通信方式，这里的“点”指的是node，也就是说node之间可以通过topic方式来传递信息。</p>
+<h4 id="Topic特点"><a href="#Topic特点" class="headerlink" title="Topic特点"></a>Topic特点</h4><p>​    通过Topic进行消息路由不需要节点之间直接连接，这就意味着发布者（publisher）和订阅者（subscriber）之间不需要知道彼此是否存在。同一个Topic也可以有很多订阅者，一个主题可以有多个订阅者也可以有多个发布者，但是你需要注意用不同的节点发布同样的主题，否则会产生冲突。</p>
+<p>​    每个主题都是强类型的，发布到主题上的消息（Message）必须与主题的ROS消息类型相匹配，并且节点只能接收类型匹配的消息，节点想要订阅主题，就必须具有相同的消息类型。</p>
+<p>​    ROS的主题可以使用TCP/IP或者UDP进行传输。基于TCP传输称为TCPROS，它使用TCP/IP长连接。这是ROS默认的传输方式。基于UDP传输称为UDPROS，它是一种低延迟高效率的传输方式，但可能产生数据丢失。所以它最适合于像远程操控的任务。</p>
+<ul>
+<li>topic通信方式是异步的，发送者调用publish()方法，发送完成立即返回，不用等待反馈。 </li>
+<li>subscriber通过回调函数的方式来处理消息。 </li>
+<li>topic可以同时有多个subscribers，也可以同时有多个publishers。</li>
+<li>topic是强类型的。</li>
+</ul>
+<h4 id="Topic的初始化过程"><a href="#Topic的初始化过程" class="headerlink" title="Topic的初始化过程"></a>Topic的初始化过程</h4><p>​    首先，publisher节点和subscriber节点都要到节点管理器进行注册，然后publisher会发布topic，subscriber在master的指挥下会订阅该topic，从而建立起sub-pub之间的通信。注意整个过程是单向的。 Subscriber接收消息会进行处理，一般这个过程叫做回调(Callback)。所谓回调就是提前定义好了一个处理函数（写在代码中） ，当有消息来就会触发这个处理函数，函数会对消息进行处理。 </p>
+<h4 id="Topic与Message"><a href="#Topic与Message" class="headerlink" title="Topic与Message"></a>Topic与Message</h4><p>​    topic有很严格的格式要求，这种数据格式就是Message。Message按照定义解释就是topic内容的数据类型，也称之为topic的格式标准。这里和我们平常用到的Massage直观概念有所不同，这里的Message不单单指一条发布或者订阅的消息，也指定为topic的格式标准。 </p>
+<p>​    可以理解msg是一个“类”，那么我们每次发布的内容可以理解为“对象”，这么对比来理解可能更加容易。 我们实际通常不会把Message概念分的那么清，通常说Message既指的是类，也是指它的对象。而msg文件则相当于类的定义了。 </p>
+<h3 id="Service-服务"><a href="#Service-服务" class="headerlink" title="Service 服务"></a>Service 服务</h3><h3 id="Parameter-server-参数服务器"><a href="#Parameter-server-参数服务器" class="headerlink" title="Parameter server 参数服务器"></a>Parameter server 参数服务器</h3><h3 id="Action-动作"><a href="#Action-动作" class="headerlink" title="Action 动作"></a>Action 动作</h3><h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="Package命令行工具"><a href="#Package命令行工具" class="headerlink" title="Package命令行工具"></a>Package命令行工具</h3><table>
+<thead>
+<tr>
+<th>-命令</th>
+<th>-作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rospack</td>
+<td>获取信息或者在系统中查找工作空间</td>
+</tr>
+<tr>
+<td>catkin_create_pkg</td>
+<td>创建一个新的功能包</td>
+</tr>
+<tr>
+<td>catkin_make</td>
+<td>编译工作空间</td>
+</tr>
+<tr>
+<td>rosdep</td>
+<td>安装功能包的系统依赖</td>
+</tr>
+<tr>
+<td>rqt_dep</td>
+<td>查看包的依赖关系图</td>
+</tr>
+<tr>
+<td>roscd</td>
+<td>更改目录 类Linux的 cd命令</td>
+</tr>
+<tr>
+<td>rosed</td>
+<td>编辑文件</td>
+</tr>
+<tr>
+<td>roscp</td>
+<td>从一些功能包复制文件</td>
+</tr>
+<tr>
+<td>rosd</td>
+<td>列出功能包的目录</td>
+</tr>
+<tr>
+<td>rosls</td>
+<td>功能包下的文件</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Message命令"><a href="#Message命令" class="headerlink" title="Message命令"></a>Message命令</h3><table>
+<thead>
+<tr>
+<th>-message命令</th>
+<th>-作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rosmsg list</td>
+<td>列出系统上所有的msg</td>
+</tr>
+<tr>
+<td>rosmsg show msg_name</td>
+<td>显示某个msg的内容</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Service-命令"><a href="#Service-命令" class="headerlink" title="Service 命令"></a>Service 命令</h3><table>
+<thead>
+<tr>
+<th>-命令</th>
+<th>-作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rosservice list</td>
+<td>显示服务列表</td>
+</tr>
+<tr>
+<td>rosservice info</td>
+<td>打印服务信息</td>
+</tr>
+<tr>
+<td>rosservice type</td>
+<td>打印服务类型</td>
+</tr>
+<tr>
+<td>rosservice uri</td>
+<td>打印服务ROSRPC uri</td>
+</tr>
+<tr>
+<td>rosservice find</td>
+<td>按服务类型查找服务</td>
+</tr>
+<tr>
+<td>rosservice call</td>
+<td>使用所提供的args调用服务</td>
+</tr>
+<tr>
+<td>rosservice args</td>
+<td>打印服务参数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="Parameter-server命令"><a href="#Parameter-server命令" class="headerlink" title="Parameter server命令"></a>Parameter server命令</h3><table>
+<thead>
+<tr>
+<th>-命令</th>
+<th>-功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rosparam set param_key param_value</td>
+<td>设置参数</td>
+</tr>
+<tr>
+<td>rosparam get param_key</td>
+<td>显示参数</td>
+</tr>
+<tr>
+<td>rosparam load file_name</td>
+<td>从文件加载参数</td>
+</tr>
+<tr>
+<td>rosparam dump file_name</td>
+<td>保存参数到文件</td>
+</tr>
+<tr>
+<td>rosparam delete</td>
+<td>删除参数</td>
+</tr>
+<tr>
+<td>rosparam list</td>
+<td>列出参数名称</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Topoc命令"><a href="#Topoc命令" class="headerlink" title="Topoc命令"></a>Topoc命令</h4><table>
+<thead>
+<tr>
+<th style="text-align:left">-命令</th>
+<th style="text-align:left">-作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">rostopic bw topic_name</td>
+<td style="text-align:left">显示主题所使用的带宽</td>
+</tr>
+<tr>
+<td style="text-align:left">rostopic echo topic_name</td>
+<td style="text-align:left">将消息输出到屏幕</td>
+</tr>
+<tr>
+<td style="text-align:left">rostopic find message_type</td>
+<td style="text-align:left">按照类型查找主题</td>
+</tr>
+<tr>
+<td style="text-align:left">rostopic hz topic_name</td>
+<td style="text-align:left">显示主题的发布频率</td>
+</tr>
+<tr>
+<td style="text-align:left">rostopic info topic_name</td>
+<td style="text-align:left">输出活动主题、发布的主题、主题订阅者和服务的信息</td>
+</tr>
+<tr>
+<td style="text-align:left">rostopic list</td>
+<td style="text-align:left">输出活动主题的列表</td>
+</tr>
+<tr>
+<td style="text-align:left">rostopic pub topic_name type arg</td>
+<td style="text-align:left">将数据发布到主题。它允许我们直接从命令行中对任意主题创建和发布数据</td>
+</tr>
+<tr>
+<td style="text-align:left">rostopic type topic_name</td>
+<td style="text-align:left">输出主题的类型，或者说主题中发布的消息类型</td>
+</tr>
+</tbody>
+</table>
+<h3 id="博客TODO"><a href="#博客TODO" class="headerlink" title="博客TODO"></a>博客TODO</h3><p>—-ROS中常用的工具介绍</p>
+<p>分别讲述ROS中4种通讯模型（消息 服务 参数管理器 动作）</p>
+<p>—分析package中关键文件</p>
+<p>分析cmakelist例子</p>
+<p>分析package.xml例子</p>
+<p>分析luach文件例子</p>
+<p>—-使用ros提供的通讯模型</p>
+<p>创建一个自定义mesg（编写msg文件）</p>
+<p>创建一个自定义的service（srv文件）</p>
+<p>创建一个action（编写action文件）</p>
+<p>*使用Bag</p>
+<p>可视化工具的运用<br>使用TF<br>URDF与xacro<br>MoveIt</p>
+<h3 id="常见Msg类型"><a href="#常见Msg类型" class="headerlink" title="常见Msg类型"></a>常见Msg类型</h3><h4 id="Vector3-msg"><a href="#Vector3-msg" class="headerlink" title="Vector3.msg"></a>Vector3.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#文件位置:geometry_msgs/Vector3.msg</span><br><span class="line">float64 x</span><br><span class="line">float64 y</span><br><span class="line">float64 z</span><br></pre></td></tr></table></figure>
+<h4 id="Accel-msg"><a href="#Accel-msg" class="headerlink" title="Accel.msg"></a>Accel.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#定义加速度项，包括线性加速度和角加速度</span><br><span class="line">#文件位置:geometry_msgs/Accel.msg</span><br><span class="line">Vector3 linear</span><br><span class="line">Vector3 angular</span><br></pre></td></tr></table></figure>
+<h4 id="Header-msg"><a href="#Header-msg" class="headerlink" title="Header.msg"></a>Header.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#定义数据的参考时间和参考坐标</span><br><span class="line">#文件位置:std_msgs/Header.msg</span><br><span class="line">uint32 seq #数据ID</span><br><span class="line">time stamp #数据时间戳</span><br><span class="line">string frame_id #数据的参考坐标系</span><br></pre></td></tr></table></figure>
+<h4 id="Quaternion-msg"><a href="#Quaternion-msg" class="headerlink" title="Quaternion.msg"></a>Quaternion.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#消息代表空间中旋转的四元数</span><br><span class="line">#文件位置:geometry_msgs/Quaternion.msg</span><br><span class="line">float64 x</span><br><span class="line">float64 y</span><br><span class="line">float64 z</span><br><span class="line">float64 w</span><br></pre></td></tr></table></figure>
+<h4 id="Point-msg"><a href="#Point-msg" class="headerlink" title="Point.msg"></a>Point.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#空间中的点的位置</span><br><span class="line">#文件位置:geometry_msgs/Point.msg</span><br><span class="line">float64 x</span><br><span class="line">float64 y</span><br><span class="line">float64 z</span><br></pre></td></tr></table></figure>
+<h4 id="Pose-msg"><a href="#Pose-msg" class="headerlink" title="Pose.msg"></a>Pose.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#消息定义自由空间中的位姿信息，包括位置和指向信息</span><br><span class="line">#文件位置:geometry_msgs/Pose.msg</span><br><span class="line">Point position</span><br><span class="line">Quaternion orientation</span><br></pre></td></tr></table></figure>
+<h4 id="PoseStamped-msg"><a href="#PoseStamped-msg" class="headerlink" title="PoseStamped.msg"></a>PoseStamped.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#定义有时空基准的位姿</span><br><span class="line">#文件位置：geometry_msgs/PoseStamped.msg</span><br><span class="line">Header header</span><br><span class="line">Pose pose</span><br></pre></td></tr></table></figure>
+<h4 id="PoseWithCovariance-msg"><a href="#PoseWithCovariance-msg" class="headerlink" title="PoseWithCovariance.msg"></a>PoseWithCovariance.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#表示空间中含有不确定性的位姿信息</span><br><span class="line">#文件位置：geometry_msgs/PoseWithCovariance.msg</span><br><span class="line">Pose pose</span><br><span class="line">float64[36] covariance</span><br></pre></td></tr></table></figure>
+<h4 id="Twist-msg"><a href="#Twist-msg" class="headerlink" title="Twist.msg"></a>Twist.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#定义空间中物体运动的线速度和角速度</span><br><span class="line">#文件位置：geometry_msgs/Twist.msg</span><br><span class="line">Vector3 linear</span><br><span class="line">Vector3 angular</span><br></pre></td></tr></table></figure>
+<h4 id="TwistWithCovariance-msg"><a href="#TwistWithCovariance-msg" class="headerlink" title="TwistWithCovariance.msg"></a>TwistWithCovariance.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#消息定义了包含不确定性的速度量，协方差矩阵按行分别表示：</span><br><span class="line">#沿x方向速度的不确定性，沿y方向速度的不确定性，沿z方向速度的不确定性</span><br><span class="line">#绕x转动角速度的不确定性，绕y轴转动的角速度的不确定性，绕z轴转动的</span><br><span class="line">#角速度的不确定性</span><br><span class="line">#文件位置：geometry_msgs/TwistWithCovariance.msg</span><br><span class="line">Twist twist</span><br><span class="line">float64[36] covariance #分别表示[x; y; z; Rx; Ry; Rz]</span><br></pre></td></tr></table></figure>
+<h4 id="Odometry-msg"><a href="#Odometry-msg" class="headerlink" title="Odometry.msg"></a>Odometry.msg</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#消息描述了自由空间中位置和速度的估计值</span><br><span class="line">#文件位置：nav_msgs/Odometry.msg</span><br><span class="line">Header header</span><br><span class="line">string child_frame_id</span><br><span class="line">PoseWithCovariance pose</span><br><span class="line">TwistWithCovariance twist</span><br></pre></td></tr></table></figure>
+<h3 id="常见Srv类型"><a href="#常见Srv类型" class="headerlink" title="常见Srv类型"></a>常见Srv类型</h3><h4 id="Empty-srv"><a href="#Empty-srv" class="headerlink" title="Empty.srv"></a>Empty.srv</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#文件位置：std_srvs/Empty.srv</span><br><span class="line">#代表一个空的srv类型</span><br><span class="line"></span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+<h4 id="GetPlan-srv"><a href="#GetPlan-srv" class="headerlink" title="GetPlan.srv"></a>GetPlan.srv</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#文件位置:nav_msgs/GetPlan.srv</span><br><span class="line">#得到一条从当前位置到目标点的路径</span><br><span class="line">geometry_msgs/PoseStamped start #起始点</span><br><span class="line">geometry_msgs/PoseStamped goal #目标点</span><br><span class="line">float32 tolerance #到达目标点的x，y方向的容错距离</span><br><span class="line">---</span><br><span class="line">nav_msgs/Path plan</span><br></pre></td></tr></table></figure>
+<h3 id="常见-Action类型"><a href="#常见-Action类型" class="headerlink" title="常见 Action类型"></a>常见 Action类型</h3></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/13/使用Hexo在Github搭建自己的博客/">使用Hexo在Github搭建自己的博客</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-13</time><div class="content"><h1 id="使用Hexo在Github搭建自己的博客"><a href="#使用Hexo在Github搭建自己的博客" class="headerlink" title="使用Hexo在Github搭建自己的博客"></a>使用Hexo在Github搭建自己的博客</h1><h2 id="hexo本地部署"><a href="#hexo本地部署" class="headerlink" title="hexo本地部署"></a>hexo本地部署</h2><p>hexo是一款基于Node.js的静态博客框架</p>
+<p>主页: <a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">https://hexo.io/zh-cn/</a></p>
+<p>部署过程：</p>
+<p>由于是基于Node.js 故需要先安装node</p>
+<p>node安装完毕后 打开命令行窗口 运行下列命令（在windows下，推荐使用git bash）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- npm install hexo-cli -g</span><br><span class="line">- hexo init blog</span><br><span class="line">- <span class="built_in">cd</span> blog</span><br><span class="line">- npm install</span><br><span class="line">- hexo server <span class="comment">#启动本地后台 此时可通过浏览器访问 </span></span><br><span class="line"><span class="comment">#这个命令可以指定端口号 加入电脑的4000端口被占用会报错</span></span><br><span class="line"><span class="comment">#浏览器输入http://localhost:4000</span></span><br></pre></td></tr></table></figure>
+<p>  ​</p>
+<h2 id="hexo常用命令"><a href="#hexo常用命令" class="headerlink" title="hexo常用命令"></a>hexo常用命令</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- hexo new<span class="string">"postName"</span> <span class="comment">#新建文章</span></span><br><span class="line">- hexo new page<span class="string">"pageName"</span> <span class="comment">#新建页面</span></span><br><span class="line">- hexo generate <span class="comment">#生成静态页面至public目录</span></span><br><span class="line">- hexo server <span class="comment">#开启预览访问端口（默认端口4000，'ctrl + c'关闭server）</span></span><br><span class="line">- hexo deploy <span class="comment">#将.deploy目录部署到GitHub</span></span><br><span class="line">- hexo <span class="built_in">help</span> <span class="comment"># 查看帮助</span></span><br><span class="line">- hexo version <span class="comment">#查看Hexo的版本</span></span><br></pre></td></tr></table></figure>
+<h2 id="hexo目录内容"><a href="#hexo目录内容" class="headerlink" title="hexo目录内容"></a>hexo目录内容</h2><ul>
+<li>node_modules：是依赖包</li>
+<li>public：存放的是生成的页面</li>
+<li>scaffolds：命令生成文章等的模板</li>
+<li>source：用命令创建的各种文章</li>
+<li>themes：主题</li>
+<li>_config.yml：整个博客的配置</li>
+<li>db.json：source解析所得到的</li>
+<li>package.json：项目所需模块项目的配置信息</li>
+</ul>
+<h2 id="什么是Github-Page"><a href="#什么是Github-Page" class="headerlink" title="什么是Github Page"></a>什么是Github Page</h2><p>​    在Github上创建个人主页非常方便，只要创建一个名为(user-id).github.io的版本库， 并将自己编写的网页文件推送到master分支即可。最重要的优点是支持Markdown自动渲染。Github提供个人page和项目page，我们这个说的是个人page，也可以为每个项目创建一个page。</p>
+<h2 id="部署到github"><a href="#部署到github" class="headerlink" title="部署到github"></a>部署到github</h2><p>在github新建版本库 hebinglong.github.io（名字必须是这个 不能变）</p>
+<p>github会自动将该项目作为个人主页进行渲染，可以通过该项目名称直接从外网访问（即可在浏览器上直接通过hebinglong.github.io 进行访问）。注意只支持静态网页（可以理解为纯文本吧，但是可以支持外链图片等）。</p>
+<h2 id="工作流"><a href="#工作流" class="headerlink" title="工作流"></a>工作流</h2><p>使用hexo deploy 进行部署的时候 只会将生成的静态网页（即目录下的public目录）部署到github上，也就是说，源码并没有进行版本管理，假如不小心删除了只有渲染后的html文件，而原本的markdown文件就不见了。所以建议在该项目下，新建一个分支（如src），用来对所有源码的管理。同时将该项目的默认分支设置为src，使用git commit 和git push时自动将源码部署到src分支中去，而在hexo deploy中，配置默认分支为master。</p>
+<p>这样每次写完新的博客后，使用hexo d部署master 再用 git commit 和git push备份源码。</p>
+</div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/"><i class="fa fa-chevron-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2019 By John Doe</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
