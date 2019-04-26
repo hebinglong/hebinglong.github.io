@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content><meta name="keywords" content><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><title>Hexo</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+<!DOCTYPE html><html lang="en"><head><meta name="generator" content="Hexo 3.8.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content><meta name="keywords" content><meta name="author" content="hebinglong"><meta name="copyright" content="hebinglong"><title>DragonHo's Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
   root: '/',
   algolia: undefined,
   localSearch: undefined,
@@ -7,201 +7,41 @@
     error: 'Copy error',
     noSupport: 'The browser does not support'
   }
-} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">John Doe</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">14</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">1</span></a></div></div></div><nav class="no-bg" id="nav"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Hexo</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">Hexo</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2019/04/26/hexo-博客目录介绍/">hexo 博客目录介绍</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-26</time><div class="content"><p>摘抄自：<a href="http://qiyujian.com/2017/09/08/20170908/" target="_blank" rel="noopener">http://qiyujian.com/2017/09/08/20170908/</a></p>
-<h3 id="Hexo工作流程"><a href="#Hexo工作流程" class="headerlink" title="Hexo工作流程"></a>Hexo工作流程</h3><p>有2种方式可以了解hexo的工作流程. 一是去官网直接读document或者API, 二是自己一边动手配置一边搜索或查看文档. 我推荐的过程是, 先到官网大致浏览一下tutorial, 然后找个demo自己动手配置, 遇到问题再搜索或者查阅官网文档. 这样既能在起步之初对于hexo整体有个大概了解, 又可以边动手边查阅.</p>
-<p><a href="http://coderunthings.com/2017/08/20/howhexoworks/" target="_blank" rel="noopener">这篇文章</a>不纠缠细节, 从总体给出了hexo的工作流程, 感觉比较清晰. 如果借助MVC的概念来理解hexo的话:</p>
-<ul>
-<li>hexo项目路径下的source路径相当于M, 即数据. 对于博客系统来说, 以.md文件形式存储的博文就是hexo的数据.</li>
-<li>themes路径下的模版相当于V, 即视图. hexo会将source中的数据(博文或其他)填到theme路径下的模版中.</li>
-<li>themes路径下的js或其他代码相当于C, 即控制. 会在静态网页中进行一些用户交互响应.</li>
-</ul>
-<p>这样的类比理解肯定有不妥的地方, 后续如果有新的理解会再来修改更正.</p>
-<p>还有一些其他的路径:</p>
-<ul>
-<li>public<br>是hexo生成的静态网页的全部, 而且包括js和css, 图片资源等. 这些会随着 hexo deploy 命令推送到github项目的master分支上. Github Pages就是解析这些文件, 呈现出静态页面的博客来.</li>
-<li>node_modules<br>路径下是hexo安装的一些插件. 安装的插件可以在package.json中配置. 如果是用npm进行安装, 建议加上<em>–save</em>参数, 这样该插件的信息就会被保存到package.json中, 下次只需要运行<em>npm install</em>即可. 这对多地更新博客, 或者重新搭建本地博客编写环境会非常方便.</li>
-</ul>
-<p>另外, hexo项目根目录下会有一个_config.yml, 在themes/some_theme/ 路径下也会有一个_config.yml, 前者是整个hexo项目的配置, 后者是某个theme的配置.</p>
-<p>所以, 总体描述hexo的过程就是:</p>
-<ol>
-<li><em>hexo generate</em> 命令会将source路径下的数据根据配置信息填充到themes路径下的模版中, 生成的静态网页需要的文件存放在public路径下;</li>
-<li><em>hexo deploy</em> 会将public路径下的文件上传到Github该项目的master分支;</li>
-<li>Github Pages解析master分支里的静态网页文件.<br>这样当我们访问时, 就会看到博客内容了. 当然, hexo工作过程中会调用一些列依赖的插件. 在网上都很容易找到某些功能需要的插件和安装方法.</li>
-</ol>
-<h3 id="如何实现多地更新博客"><a href="#如何实现多地更新博客" class="headerlink" title="如何实现多地更新博客"></a>如何实现多地更新博客</h3><p>创建的博客这个repository本身就是托管在github上的, 在运行 <em>hexo deploy</em> 命令提交成功后, 也会看到已经提交到master分支的输出结果. 那么, 就可以利用github来进行博客备份了. 大概思路就是, 给博客repository再拉个名为hexo的分支(当然名字是随便的), 平时的改动, 都用 <em>git clone / pull/ add / commit / push</em> 等命令来进行管理, 就当是代码版本那样管理. 在本地编写好博客文章, 想要布置到github时, 使用命令 <em>hexo deploy</em> , 这样还是会推送到master分支. 也就是说, hexo相关的操作与之前完全一样, 没有变化. 知乎的这个<a href="https://www.zhihu.com/question/21193762" target="_blank" rel="noopener">问题</a>下的几个答案挺有帮助的, 可以参考. 几个小的注意的地方是:</p>
-<ol>
-<li>在浏览器页面建立新的分支hexo后, 在repository的settings中, 将hexo设置为默认分支, 这样clone到本地后, 每次git管理不用在切换分支了, 主要是因为<em>hexo deploy</em> 命令是默认推送到master的.</li>
-<li>根据自己情况配置.gitignore文件, 其中public路径和node_modules路径都不需要同步到github. node_modules路径下是存放下载的hexo插件, 而且体积很大. 但是注意, package.json一定要同步, 这样在搭建新环境时, 安装完NodeJS和Git后, 只需要<em>npm install</em> 即可, 还是很方便的. 上面提到的知乎的<a href="https://www.zhihu.com/question/21193762" target="_blank" rel="noopener">问题</a>下面有一个答案详细介绍了哪些需要同步, 哪些不必同步.</li>
-</ol>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/04/26/test-20190426-1/">test 20190426-1</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-26</time><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/ROS/">ROS</a></span><div class="content"><p> THIS IS A TAG OF ROS TEST.</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/04/26/hello-world/">Hello World</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-26</time><div class="content"><p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/28/库文件接口与二进制兼容/">库文件接口与二进制兼容</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-28</time><div class="content"><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>YING’s <a href="https://izualzhy.cn/do-not-use-virtual-function-as-dynamic-lib-interface" target="_blank" rel="noopener">避免使用虚函数作为动态库的接口</a></p>
-<p>陈硕’s <a href="https://blog.csdn.net/Solstice/article/details/6233478" target="_blank" rel="noopener">C++ 工程实践(4)：二进制兼容性</a></p>
-<p>陈硕’s <a href="https://blog.csdn.net/Solstice/article/details/6244905" target="_blank" rel="noopener">C++ 工程实践(5)：避免使用虚函数作为库的接口</a></p>
-<h2 id="感悟总结"><a href="#感悟总结" class="headerlink" title="感悟总结"></a>感悟总结</h2><p>​    陈硕在博客的最后推荐使用impl手法对库进行接口的暴露，虽然我之前的库一般也是使用impl手法进行封装，但最初的目的只是为了将不必要的代码对外隐藏，比如说private的成员变量和方法。在拜读两位大神的博客后，对<strong>二进制兼容性</strong>这个概念有了从编译原理层面的了解，同时加深了程序在运行期与编译期对动态库与静态库的处理过程。</p>
-<pre><code>YING的博客以一个非常简单的DEMO证明：**以虚函数作为接口的动态库，若该库添加新的接口（旧接口不变），只通过替换动态库，而不用新的头文件对原APP的源码进行编译，会造成程序运行异常。**
-</code></pre><p>​    以前我一直以为只要旧接口不变可以只替换动态库，看完上面的博客后，明白了两个概念，分别是<strong>bind-by-vtable-offset</strong>与<strong>bind-by-name</strong>。这两个概念在陈硕的博客最后的总结导出（主要是博主我基础知识薄弱），现摘抄如下</p>
-<blockquote>
-<p>为什么 non-virtual 函数比 virtual 函数更健壮？因为 virtual function 是 bind-by-vtable-offset，而 non-virtual function 是 bind-by-name。加载器 (loader) 会在程序启动时做决议(resolution)，通过 mangled name 把可执行文件和动态库链接到一起。</p>
-</blockquote>
-<p>通过<strong>bind-by-vtable-offset</strong>与<strong>bind-by-name</strong>也同时导出了<strong>二进制兼容性</strong>这个话题。</p>
-<h3 id="application-binary-interface-ABI"><a href="#application-binary-interface-ABI" class="headerlink" title="application binary interface (ABI)"></a><strong>application binary interface</strong> (<strong>ABI</strong>)</h3><blockquote>
-<p>In computer software, an <strong>application binary interface</strong> (<strong>ABI</strong>) is an <strong>interface</strong> between two binary program modules; often, one of these modules is a <strong>library</strong> facility, and the other is a program that is being run by a user.</p>
-<p>An <strong>ABI</strong> defines how data structures or computational routines are accessed in <strong>machine code</strong>, which is a low-level, hardware-dependent format; </p>
-<p>in contrast, an <strong>API</strong> defines this access in <strong>source code</strong>, which is a relatively high-level, relatively hardware-independent, often human-readable format.</p>
-<p> A common aspect of an ABI is the calling convention, which determines how data is provided as input to or read as output from computational routines; </p>
-</blockquote>
-<p>在说ABI之前，我要先说说链接（link）.</p>
-<p>   链接的本质就是把不同的object文件（目标文件）粘合到一个可执行文件，可以说有点像是搭积木或玩拼图。为了能使link成功，通常来说需要一套规则，而这个规则简单的说就是符号（Symbol）裁决，通常靠object文件中的Symbol Table来完成管理（这个规则是可以写一本书的量，我也不太懂）。那么什么是符号呢？在链接阶段，通常我们把函数和变量统称为符号（Symbol）。这是一个二元值，即（Symbol name， Symbol value），而这又分别对应到（函数名，函数地址）或者是（变量名，变量地址）。</p>
-<p>   在20世纪70年代以前，编译器编译源代码产生目标文件时，符号名与相对应的函数名或者变量名是一样的。但是随着时间的推移，越来越多的库出现，这样的话符号相同的情况就越来越多，也就是符号冲突日益严重。为了防止符号名冲突，Unix下的C就规定，C语言源代码文件中的所有全局变量和函数名经过编译后，相对应的符号名前面加上下划线“_”。这种简单而原始的处理方法还是能应付小规模的开发的，但是大规模的团队如果命名不规范仍然会出现问题。</p>
-<p>所以，像C++这样后来设计的语言，增加了namespace的方法来解决某块之前的符号冲突。</p>
-<p>  C++除了namespace，还有override,overload,inherit,template….等等特性，这些都个符号管理增加了复杂度。C++的符号修饰的规则还和编译器相关，目前分成两个大派别，GCC和Virtual C++.有兴趣的请自己google.</p>
-<p>  所以，大家知道了C和C++相互调用时候为什么会出现extern “C”{……..}了吧？extern “C”{……..}告诉编译器采用C的符号规则，这样大家都统一了！</p>
-<p>   在说ABI之前仍然还要谈谈API.所谓API是指：Application Programming Interface。这是偏向源代码级别的接口，比如POSIX就是这样一个API标准。而ABI是指：Application Binary Interface。这是偏向二进制级别的接口，兼容程度比API更为严格。上面我们谈到的符号就是ABI中的一部分。除此之外还包含有C++对象的内存分布，函数调用方式，template如何实例化，异常的产生和捕获，内嵌函数的访问细节…..</p>
-<p>   本来大家都希望ABI能统一的，这样的话，移植就可以轻松很多，然后不幸的是：仅符号管理我们就可以看出GNU和Microsoft就有很大的不同，而且即使是Microsoft的不同版本的编译器也可能有不一样的行为。所以C++一直被人诟病的原因之一，就是ABI的兼容性不好。</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/28/glog源码笔记/">glog源码笔记</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-28</time><div class="content"><p>异步信号安全</p>
-<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><h3 id="RTTI"><a href="#RTTI" class="headerlink" title="RTTI"></a>RTTI</h3><p>​    RTTI（Run-Time Type Identification)，通过运行时类型信息程序能够使用基类的指针或引用来检查这些指针或引用所指的对象的实际派生类型。</p>
-<h3 id="Name-Mangling概述"><a href="#Name-Mangling概述" class="headerlink" title="Name Mangling概述"></a>Name Mangling概述</h3><p>​    我们假设读者都有这样一个背景知识：“程序员写了一个叫functionName()的函数，该源程序编译为可执行程序后，这个程序的入口不在叫functionName(),而是一些看不懂的如abcde()的函数名”。Name Mangling就是编译过程中”functionName”变为“abcde”的过程，它的逆过程一般称为 demangling。</p>
-<p>​    Name Mangling本身和glog没有什么关系，但是有时候我们在<strong>程序异常崩溃的时候希望通过堆栈信息查找程序异常的位置</strong>的时候，由于Name Mangling的原因，只能知道问题出在了“abcde”这个函数里，此时开发者就心里一万只草泥马了，我根本没有写过“abcde”这个函数啊，怎么会报错呢？<strong>那么在这波如此反人类的操作中，日志模块有必要实现demangling这个过程</strong>。下面引用一段网上摘抄关于Name Mangling的叙述：</p>
-<blockquote>
-<p>​    大型程序是通过多个模块构建而成，模块之间的关系由makefile来描述。对于由C++语言编制的大型程序而言，也是符合这个规则。<br>    程序的构建过程一般为：各个源文件分别编译，形成目标文件。多个目标文件通过链接器形成最终的可执行程序。显然，从某种程度上说，编译器的输出是链接器的输入，链接器要对编译器的输出做二次加工。<strong>从通信的角度看，这两个程序需要一定的协议来规范符号的组织格式。这就是Name Mangling产生的根本原因。</strong><br>    C++的语言特性比C丰富的多，C++支持的函数重载功能是需要Name Mangling技术的最直接的例子。对于重载的函数，不能仅依靠函数名称来区分不同的函数，因为C++中重载函数的区分是建立在以下规则上的：<br>函数名字不同 || 参数数量不同||某个参数的类型不同<br>那么区分函数的时候，应该充分考虑参数数量和参数类型这两种语义信息，这样才能为却分不同的函数保证充分性。<br>    当然，C++还有很多其他的地方需要Name Mangling，如namespace, class, template等等。<br>总的来说，<strong>Name Mangling就是一种规范编译器和链接器之间用于通信的符号表表示方法的协议，其目的在于按照程序的语言规范，使符号具备足够多的语义信息以保证链接过程准确无误的进行.</strong></p>
-</blockquote>
-<h3 id="如何识别C-编译以后的函数名（demangle）"><a href="#如何识别C-编译以后的函数名（demangle）" class="headerlink" title="如何识别C++编译以后的函数名（demangle）"></a>如何识别C++编译以后的函数名（demangle）</h3><blockquote>
-<p>Transforming C++ ABI identifiers (like RTTI symbols) into the original C++ source identifiers is called “demangling.”</p>
-</blockquote>
-<p>C/C++语言在编译以后，函数的名字会被编译器修改，改成编译器内部的名字，这个名字会在链接的时候用到。如果用<a href="http://www.gnu.org/software/libc/manual/html_node/Backtraces.html" target="_blank" rel="noopener">backtrace</a>之类的函数打印堆栈时，显示的就是被编译器修改过的名字，比如说_Z3foov 。 那么这个函数真实的名字是什么呢？</p>
-<p>每个编译器都有一套自己内部的名字，这里只是针对linux下g++而言。<br>以下是基本的方法:<br>每个方法都是以_Z开头，对于嵌套的名字（比如名字空间中的名字或者是类中间的名字,比如Class::Func）后面紧跟N ， 然后是各个名字空间和类的名字，每个名字前是名字字符的长度，再以E结尾。(如果不是嵌套名字则不需要以E结尾)</p>
-<p>比如上面的_Z3foov 就是函数foo() , v 表示参数类型为void .<br>又如N:C:Func 经过修饰后就是 _ZN1N1C4FuncE, 这个函数名后面跟参数类型。 如果跟一个整型，那就是_ZN1N1C4FuncEi</p>
-<p>另外在linux下有一个工具可以实现这种转换，这个工具是c++filt , 注意不是c++filter.</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xuyang@ubuntu15:~/blog$ c++filt _ZN1N1C4FuncEi</span><br><span class="line">N::C::Func(int)</span><br></pre></td></tr></table></figure>
-<h2 id="不可重入、线程安全与异步信号安全"><a href="#不可重入、线程安全与异步信号安全" class="headerlink" title="不可重入、线程安全与异步信号安全"></a>不可重入、线程安全与异步信号安全</h2><p><a href="http://www.cnblogs.com/zhaoyl/archive/2012/10/03/2711018.html" target="_blank" rel="noopener">http://www.cnblogs.com/zhaoyl/archive/2012/10/03/2711018.html</a></p>
-<p><a href="https://www.ibm.com/developerworks/cn/linux/l-reent.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-reent.html</a></p>
-<h2 id="glog中的辅助调试手段"><a href="#glog中的辅助调试手段" class="headerlink" title="glog中的辅助调试手段"></a>glog中的辅助调试手段</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// We don't use assert() since it's not guaranteed to be</span></span><br><span class="line"><span class="comment">// async-signal-safe.  Instead we define a minimal assertion</span></span><br><span class="line"><span class="comment">// macro. So far, we don't need pretty printing for __FILE__, etc.</span></span><br><span class="line"><span class="comment">/*in symbolize.cc*/</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The demangler is implemented to be used in async signal handlers to</span></span><br><span class="line"><span class="comment">// symbolize stack traces.  We cannot use libstdc++'s</span></span><br><span class="line"><span class="comment">// abi::__cxa_demangle() in such signal handlers since it's not async</span></span><br><span class="line"><span class="comment">// signal safe (it uses malloc() internally).</span></span><br><span class="line"><span class="comment">/*in demangle.h*/</span></span><br></pre></td></tr></table></figure>
-<h2 id="glog中的宏"><a href="#glog中的宏" class="headerlink" title="glog中的宏"></a>glog中的宏</h2><h2 id="利用匿名对象"><a href="#利用匿名对象" class="headerlink" title="利用匿名对象"></a>利用匿名对象</h2><h2 id="glog在实时系统的改造"><a href="#glog在实时系统的改造" class="headerlink" title="glog在实时系统的改造"></a>glog在实时系统的改造</h2></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/谈谈ROS与工业机器人/">谈谈ROS与工业机器人</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/ROS/">ROS</a></span><div class="content"><h2 id="ROS算法与工具"><a href="#ROS算法与工具" class="headerlink" title="ROS算法与工具"></a>ROS算法与工具</h2><h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><ol>
-<li><strong>rqt_plot</strong>：可以实时绘制当前任意Topic的数值曲线。</li>
-<li><strong>rqt_graph</strong>：可以绘制出各节点之间的连接状态，和正在使用的Topic等。</li>
-<li><strong>TF</strong>：TF是Transform的简写，利用它，我们可以实时知道各连杆坐标系的位姿，也可以求出两个坐标系的相对位置。</li>
-<li><strong>Rviz</strong>：超强大的3D可视化工具，可以显示机器人模型、3D电影、各种文字图标、也可以很方便二次开发。</li>
-</ol>
-<h3 id="周边算法库"><a href="#周边算法库" class="headerlink" title="周边算法库:"></a>周边算法库:</h3><ol>
-<li><strong>OROCOS</strong>：这个开源项目主要侧重于机器人底层控制器的设计，包括用于计算串联机械臂运动学数值解的KDL、贝叶斯滤波、实时控制等功能。</li>
-<li><strong>OpenRave</strong>：这是在ROS之前最多人用来做运动规划的平台，ROS已经将其中的ikfast（计算串联机械臂运动学解析解）等功能吸收。</li>
-<li><strong>Player</strong>：一款优秀的二维仿真平台，可以用于平面移动机器人的仿真，现在在ROS里可以直接使用。</li>
-<li><strong>OpenCV</strong>：大名鼎鼎的机器视觉开源项目，ROS提供了cv_bridge，可以将OpenCV的图片与ROS的图片格式相互转换。</li>
-<li><strong>OMPL</strong>：现在最著名的运动规划开源项目，已经成了MoveIt的一部分。</li>
-<li><strong>Visp</strong>：一个开源视觉伺服项目，已经跟ROS完美整合。</li>
-<li><strong>Gazebo</strong>：一款优秀的开源仿真平台，可以实现动力学仿真、传感器仿真等，也已被ROS吸收。</li>
-</ol>
-<h3 id="自主库算法库："><a href="#自主库算法库：" class="headerlink" title="自主库算法库："></a>自主库算法库：</h3><ol>
-<li><strong>ORK</strong>：一个物体识别与位姿估计开源库，包含LineMod等算法，但实际使用效果还不是太理想。</li>
-<li><strong>PCL</strong>：一个开源点云处理库，原本是从ROS中发展起来的，后来由于太受欢迎，为了让非ROS用户也能用，就单独立了一个PCL的项目。</li>
-<li><strong>Gmapping</strong>：这其实是在OpenSlam项目继承过来的（后来发展和改动较大），利用gmapping可以实现laser-based SLAM，快速建立室内二维地图。</li>
-<li><strong>Localization：</strong>基于扩展卡尔曼滤波（EKF）和无迹卡尔曼滤波（UKF）的机器人定位算法，可以融合各种传感器的定位信息，获得较为准确的定位效果。</li>
-<li><strong>Navigation</strong>：基于Dijkstra、A*算法（全局规划器）和动态窗口法DWA（局部规划器）的移动机器人路径规划模块，可以在二维地图上实现机器人导航。</li>
-<li><strong>MoveIt</strong>：这个是专注于移动机械臂运动规划的模块，下次讲运动规划入门的时候再详细介绍它。</li>
-</ol>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/谈谈Xenomaii与ADOES/">谈谈Xenomaii与ADEOS</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><div class="content"><p>ADEOS</p>
-<p>实时性三部分</p>
-<ol>
-<li>用户态</li>
-<li>内核态</li>
-<li>定时器中断模式</li>
-</ol>
-<ol>
-<li>单内核</li>
-<li>微内核</li>
-</ol>
-<p>RTDM （Real Time Driver Model）</p>
-<p>Xenomai 3 的两种形式</p>
-<p>单核的 Mercury</p>
-<p>双核的 Cobalt</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/Open-Source-EtherCAT-Master/">Open Source EtherCAT Master</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><div class="content"><p>##SOME</p>
-<p><a href="http://openethercatsociety.github.io" target="_blank" rel="noopener">http://openethercatsociety.github.io</a></p>
-<p>Supported by rt-labs and Speciaal Machinefabriek Ketels</p>
-<ol>
-<li><strong>SOEM</strong>：Simple Open EtherCAT Master</li>
-<li><strong>SOES</strong>：Simple Open EtherCAT Slave</li>
-</ol>
-<p><strong>SOEM and SOES are small EtherCAT stacks for the embedded market.</strong></p>
-<p>##IgH EtherCAT Master</p>
-<p><a href="http://etherlab.org/en/ethercat/" target="_blank" rel="noopener">http://etherlab.org/en/ethercat/</a></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li>（网上说的）使用起来SOEM的简单一些，而the IgH EtherCAT® Master更复杂一些，但对EtherCAT的实现更为完整。</li>
-<li>好像 Igh 的只支持Linux平台，SOME支持Linux和Windows。</li>
-<li>两者都需要实时内核的支持（如： Xenomai, RT-Preempt）</li>
-<li>开发时需要注意，不仅对操作系统有要求，对CPU型号、网卡型号也有一定的要求。</li>
-<li>为了保证实时性可能还需要修改网卡驱动代码。（网卡驱动可能自带缓冲）</li>
-</ol>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/五种开源协议的比较-BSD-Apache-GPL-LGPL-MIT/">五种开源协议的比较(BSD,Apache,GPL,LGPL,MIT)</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><div class="content"><p>#五种开源协议的比较</p>
-<p>该博文转载在网上。</p>
-<h2 id="BSD"><a href="#BSD" class="headerlink" title="BSD"></a>BSD</h2><p><strong>[original BSD license] 、[FreeBSD license] 、[Original BSD license]</strong></p>
-<p>BSD开源协议是一个给于使用者很大自由的协议。基本上使用者可以”为所欲为”,可以自由的使用，修改源代码，也可以将修改后的代码作为开源或者专有软件再发布。但”为所欲为”的前提当你发布使用了BSD协议的代码，或则以BSD协议代码为基础做二次开发自己的产品时，需要满足三个条件：</p>
-<ol>
-<li><p>如果再发布的产品中包含源代码，则在源代码中必须带有原来代码中的BSD协议。</p>
-</li>
-<li><p>如果再发布的只是二进制类库/软件，则需要在类库/软件的文档和版权声明中包含原来代码中的BSD协议。</p>
-</li>
-<li><p>不可以用开源代码的作者/机构名字和原来产品的名字做市场推广。</p>
-</li>
-</ol>
-<p>BSD 代码鼓励代码共享，但需要<strong>尊重代码作者的著作权</strong>。BSD由于允许使用者修改和重新发布代码，也允许使用或在BSD代码上开发商业软件发布和销售，因此是对<strong>商业集成很友好</strong>的协议。而很多的公司企业在选用开源产品的时候都首选BSD协议，因为可以完全控制这些第三方的代码，在必要的时候可以修改或者二次开发。</p>
-<h2 id="Apache-Licence-2-0"><a href="#Apache-Licence-2-0" class="headerlink" title="Apache Licence 2.0"></a>Apache Licence 2.0</h2><p><strong>[Apache License, Version 2.0]、[Apache License, Version 1.1] 、[Apache License, Version 1.0]</strong></p>
-<p>Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议和BSD类似，同样鼓励代码共享和尊重原作者的著作权，同样允许代码修改，再发布（作为开源或商业软件）。需要满足的条件也和BSD类似：</p>
-<ol>
-<li>需要给代码的用户一份Apache Licence</li>
-<li>如果你修改了代码，需要在 被修改的文件中说明。</li>
-<li>在延伸的代码中（修改和有源代码衍生的代码中）需要带有原来代码中的协议，商标，专利声明和其他原来作者规定需要包含的说明。</li>
-<li>如果再发布的产品中包含一个Notice文件，则在Notice文件中需要带有Apache Licence。你可以在Notice中增加自己的许可，但不可以表现为对Apache Licence构成更改。</li>
-</ol>
-<p>Apache Licence也是对商业应用友好的许可。使用者也可以在需要的时候修改代码来满足需要并作为开源或商业产品发布/销售。</p>
-<h2 id="GPL"><a href="#GPL" class="headerlink" title="GPL"></a>GPL</h2><p><strong>[GNU General Public License]</strong></p>
-<p>​    我们很熟悉的Linux就是采用了GPL。GPL协议和BSD, Apache Licence等鼓励代码重用的许可很不一样。GPL的出发点是代码的开源/免费使用和引用/修改/衍生代码的开源/免费使用，但不允许修改后和衍生的代码做为闭源的商业软件发布和销售。这也就是为什么我们能用免费的各种linux，包括商业公司的linux和linux上各种各样的由个人，组织，以及商业软件公司开发的免费软件了。</p>
-<p>​    GPL协议的主要内容是只要在一个软件中使用(”使用”指类库引用，修改后的代码或者衍生代码)GPL 协议的产品，则该软件产品必须也采用GPL协议，既必须也是开源和免费。<strong>这就是所谓的”传染性 ”</strong> 。GPL协议的产品作为一个单独的产品使用没有任何问题，还可以享受免费的优势。</p>
-<p>​    由于GPL严格要求使用了GPL类库的软件产品必须使用GPL协议，对于使用GPL协议的开源代码，商业软件或者对代码有保密要求的部门就不适合集成/采用作为类库和二次开发的基础。</p>
-<p>​    其它细节如再发布的时候需要伴随GPL协议等和BSD/Apache等类似。</p>
-<h2 id="LGPL"><a href="#LGPL" class="headerlink" title="LGPL"></a>LGPL</h2><p><strong>[GNU Lesser General Public License]</strong></p>
-<p>​    LGPL是GPL的一个为主要为类库使用设计的开源协议。不同于GPL要求任何使用/修改/衍生之GPL类库的的软件必须采用GPL协议，<strong>LGPL允许商业软件通过类库引用(link)方式使用LGPL类库而不需要开源商业软件的代码 </strong>。这使得采用LGPL协议的开源代码可以被商业软件作为类库引用并发布和销售。</p>
-<p>​    但是如果<strong>修改LGPL协议的代码或者衍生，则所有修改的代码，涉及修改部分的额外代码和衍生的代码都必须采用LGPL协议</strong>。因此LGPL协议的开源代码很适合作为第三方类库被商业软件引用，但不适合希望以LGPL协议代码为基础，通过修改和衍生的方式做二次开发的商业软件采用。</p>
-<p>​    <strong>GPL/LGPL都保障原作者的知识产权，避免有人利用开源代码复制并开发类似的产品.</strong></p>
-<h2 id="MIT"><a href="#MIT" class="headerlink" title="MIT"></a>MIT</h2><p><strong>[MIT]</strong></p>
-<p>​    MIT是和BSD一样宽范的许可协议,<strong>作者只想保留版权,而无任何其他了限制</strong>.也就是说,你必须在你的发行版里包含原许可协议的声明 ,无论你是以二进制发布的还是以源代码发布的.</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/16/谈谈LinuxCNC/">谈谈LinuxCNC</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-16</time><div class="content"><h1 id="谈谈LinuxCNC"><a href="#谈谈LinuxCNC" class="headerlink" title="谈谈LinuxCNC"></a>谈谈LinuxCNC</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>​    在最开始打算摸索一下LinuxCNC是因为ROS一般用于科研，工业上较少使用，究其根本是因为其实时性与稳定性达不到工业标准。而LinuxCNC项目本身就是向工业方向发展，其可靠性与稳定性应该是没有问题的。故希望从LinuxCNC项目学习，主要包括保证系统实时性的方式、系统架构（整个控制系统中各个模块的解耦方式）、以及在线实时轨迹规划算法。在搜索资料发现，LinuxCNC项目原名<strong>EMC2</strong>，同时有另外一个分支叫<strong>Machinekit</strong>.</p>
-<p>LinuxCNC项目官方网址：<a href="http://linuxcnc.org/" target="_blank" rel="noopener">http://linuxcnc.org/</a></p>
-<p>Machinekit项目官方网址：<a href="http://www.machinekit.io" target="_blank" rel="noopener">http://www.machinekit.io</a></p>
-<p>直到目前为止（2018年8月16日），LinuxCNC的官方稳定版本号为<strong>2.7.14</strong>，Machinekit没有明确的版本号，但从推荐的镜像介绍里面，使用的是基于3.8内核的Debian with xenomai kernel ，同时也表示，基于rt-preempt 4.x.x kerneled versions将会很快推出。</p>
-<p>​    在这里先介绍一下Machinekit的背景，Machinekit项目最开始是希望在BeagleBoneBlack（俗称BBB，TI发布的一款嵌入式板，类似于树莓派，但是性能比树莓派稍弱，但是毕竟是TI出品，元器件与Layout都是工业级别的，稳定性有保证，相比之下，树莓派性能是比较强，但是貌似稳定性跟BBB不是一个级别，无法应用在工业领域）上移植LinuxCNC实现3D打印，无奈LinuxCNC项目最初使用的实时方案是RTAI，而RTAI不支持ARM平台，无奈之下Machinekit的作者只好自己移植其他的实时内核。所以总结起来就是 Machinekit更像是针对BBB这款硬件使用的移植版LinuxCNC。</p>
-<h2 id="LinuxCNC与Machinekit的实时方案比较"><a href="#LinuxCNC与Machinekit的实时方案比较" class="headerlink" title="LinuxCNC与Machinekit的实时方案比较"></a>LinuxCNC与Machinekit的实时方案比较</h2><p>查阅两者官网可知，目前LinuxCNC项目支持的实时方案为</p>
-<p>参考：<a href="http://linuxcnc.org/docs/2.7/html/getting-started/getting-linuxcnc.html" target="_blank" rel="noopener">http://linuxcnc.org/docs/2.7/html/getting-started/getting-linuxcnc.html</a></p>
+} </script></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">hebinglong</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">14</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">1</span></a></div></div></div><nav id="nav"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">DragonHo's Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">DragonHo's Blog</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2019/04/26/hexo-博客目录介绍/">hexo 博客目录介绍</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-26</time><div class="content">摘抄自：http://qiyujian.com/2017/09/08/20170908/
+Hexo工作流程有2种方式可以了解hexo的工作流程. 一是去官网直接读document或者API, 二是自己一边动手配置一边搜索或查看文档. 我推荐的过程是, 先到官网大致浏览一下tutorial, 然后找个 ...</div><a class="more" href="/2019/04/26/hexo-博客目录介绍/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/04/26/test-20190426-1/">test 20190426-1</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-26</time><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/ROS/">ROS</a></span><div class="content"> THIS IS A TAG OF ROS TEST.
+</div><a class="more" href="/2019/04/26/test-20190426-1/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/04/26/hello-world/">Hello World</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-04-26</time><div class="content">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in  ...</div><a class="more" href="/2019/04/26/hello-world/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/28/库文件接口与二进制兼容/">库文件接口与二进制兼容</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-28</time><div class="content">参考YING’s 避免使用虚函数作为动态库的接口
+陈硕’s C++ 工程实践(4)：二进制兼容性
+陈硕’s C++ 工程实践(5)：避免使用虚函数作为库的接口
+感悟总结​    陈硕在博客的最后推荐使用impl手法对库进行接口的暴露，虽然我之前的库一般也是使用impl手法进行封装，但最初的目的只是为 ...</div><a class="more" href="/2018/08/28/库文件接口与二进制兼容/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/28/glog源码笔记/">glog源码笔记</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-28</time><div class="content">异步信号安全
+背景知识RTTI​    RTTI（Run-Time Type Identification)，通过运行时类型信息程序能够使用基类的指针或引用来检查这些指针或引用所指的对象的实际派生类型。
+Name Mangling概述​    我们假设读者都有这样一个背景知识：“程序员写了一个叫fu ...</div><a class="more" href="/2018/08/28/glog源码笔记/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/谈谈ROS与工业机器人/">谈谈ROS与工业机器人</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><span class="article-meta tags"><span class="article-meta__separator">|</span><i class="fa fa-tag article-meta__icon" aria-hidden="true"></i><a class="article-meta__tags" href="/tags/ROS/">ROS</a></span><div class="content">ROS算法与工具工具
+rqt_plot：可以实时绘制当前任意Topic的数值曲线。
+rqt_graph：可以绘制出各节点之间的连接状态，和正在使用的Topic等。
+TF：TF是Transform的简写，利用它，我们可以实时知道各连杆坐标系的位姿，也可以求出两个坐标系的相对位置。
+Rviz：超强大的3 ...</div><a class="more" href="/2018/08/21/谈谈ROS与工业机器人/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/谈谈Xenomaii与ADOES/">谈谈Xenomaii与ADEOS</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><div class="content">ADEOS
+实时性三部分
 
-<p>Machinekit项目支持的实时方案为：</p>
-<p>参考：<a href="http://www.machinekit.io/docs/common/UnifiedBuild/" target="_blank" rel="noopener">http://www.machinekit.io/docs/common/UnifiedBuild/</a></p>
-<blockquote>
-<p>support for Xenomai and RT-PREEMPT realtime threads besides RTAI</p>
-<p>There should be minimal user configuration changes for using the new RT options.</p>
-<p>kernel autodetection</p>
-<p>The ‘unified build’ branch will detect the RT features of the running kernel and choose an appropriate thread flavor.</p>
-<p>runtime loading of support modules</p>
-<p>All thread-specific code has been wrapped into shared objects and libraries which are loaded on demand. This enables fixes, upgrades or tests by just exchanging a file.</p>
-</blockquote>
-<p>总结一下就是</p>
-<p>LinuxCNC支持Ubuntu 与Debian，实时方案选择Preempt-RT和RTAI</p>
-<p>Machinekit对操作系统没有明确的限制，但是官方在Debian上测试没问题，相比之下，Machinekit支持Xenomai 、RT-PREEMPT实时方案。</p>
-<p>对比LinuxCNC与Machinekit发现，Machinekit更致力于一套代码在多套平台上使用，其实现方式为抽象RTAPI层作为实时方案的抽象，在运行时动态加载对应的库文件。</p>
-<p>个人感觉，Machinekit的格局比LinuxCNC要大，支持面更广。但又因为其通用性，可能在稳定性上比不上LinuxCNC，当然这只是个人推测，并没有实际测试。当然，假如只是为了学习，那么Machinekit应该更有意思。</p>
-<h2 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h2><p>大概浏览了一下LinuxCNC 与 Machinekit的开发文档，发现两者的整体架构非常一致（那当然啦，毕竟本是一家），而LinuxCNC 的文档看起来好像比Machinekit更加详细。下面就先以LinuxCNC 的软件架构进行分析，最后在对比Machinekit，看看Machinekit是如何在LinuxCNC的基础上做到多平台兼容的。</p>
-<blockquote>
-<p>在写这章之前 笔者希望先了解一下xenomai的使用方式，故该博文先暂停。</p>
-</blockquote>
-<h2 id="软PLC-Classic-Ladder"><a href="#软PLC-Classic-Ladder" class="headerlink" title="软PLC Classic Ladder"></a>软PLC Classic Ladder</h2></div><hr></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2019 By John Doe</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+用户态
+内核态
+定时器中断模式
+
+
+单内核
+微内核
+
+RTDM （Real Time Driver Model）
+Xenomai 3 的两种形式
+单核的 Mercury
+双核的 Cobalt
+</div><a class="more" href="/2018/08/21/谈谈Xenomaii与ADOES/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/Open-Source-EtherCAT-Master/">Open Source EtherCAT Master</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><div class="content">##SOME
+http://openethercatsociety.github.io
+Supported by rt-labs and Speciaal Machinefabriek Ketels
+
+SOEM：Simple Open EtherCAT Master
+SOES：Simple Open ...</div><a class="more" href="/2018/08/21/Open-Source-EtherCAT-Master/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/21/五种开源协议的比较-BSD-Apache-GPL-LGPL-MIT/">五种开源协议的比较(BSD,Apache,GPL,LGPL,MIT)</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-21</time><div class="content">#五种开源协议的比较
+该博文转载在网上。
+BSD[original BSD license] 、[FreeBSD license] 、[Original BSD license]
+BSD开源协议是一个给于使用者很大自由的协议。基本上使用者可以”为所欲为”,可以自由的使用，修改源代码，也可以将修改后的 ...</div><a class="more" href="/2018/08/21/五种开源协议的比较-BSD-Apache-GPL-LGPL-MIT/#more" style="margin-top: 14px">Read more</a><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/16/谈谈LinuxCNC/">谈谈LinuxCNC</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-16</time><div class="content">谈谈LinuxCNC背景​    在最开始打算摸索一下LinuxCNC是因为ROS一般用于科研，工业上较少使用，究其根本是因为其实时性与稳定性达不到工业标准。而LinuxCNC项目本身就是向工业方向发展，其可靠性与稳定性应该是没有问题的。故希望从LinuxCNC项目学习，主要包括保证系统实时性的方式 ...</div><a class="more" href="/2018/08/16/谈谈LinuxCNC/#more" style="margin-top: 14px">Read more</a><hr></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2019 By hebinglong</div><div class="framework-info"><span>Driven - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>
