@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: DragonHo's Blog
 subtitle:
 description:
 keywords:
-author: John Doe
-language:
+author: hebinglong
+language: en
 timezone:
 
 # URL
@@ -40,7 +40,7 @@ relative_link: false
 future: true
 highlight:
   enable: true
-  line_number: true
+  line_number: false
   auto_detect: false
   tab_replace:
   
